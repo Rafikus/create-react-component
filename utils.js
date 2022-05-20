@@ -3,7 +3,7 @@ const vscode = require('vscode');
 const fse = require('fs-extra');
 const fs = require('fs');
 const path = require('path');
-const pascalCase = require('change-case').pascalCase;
+const { pascalCase, paramCase: kebabize } = require('change-case');
 
 function logger(type, msg = '') {
   switch (type) {
@@ -15,6 +15,10 @@ function logger(type, msg = '') {
       return vscode.window.showErrorMessage(`Failed: ${msg}`);
   }
 }
+
+// const kebabize = (str) => str
+//   .replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
+
 
 module.exports = {
   logger,
@@ -30,7 +34,7 @@ module.exports = {
     resolveWorkspaceRoot: path =>
       path.replace('${workspaceFolder}', vscode.workspace.rootPath),
 
-    createComponentDir: function(uri, componentName) {
+    createComponentDir: function (uri, componentName) {
       let contextMenuSourcePath;
 
       if (uri && fs.lstatSync(uri.fsPath).isDirectory()) {
@@ -41,70 +45,50 @@ module.exports = {
         contextMenuSourcePath = vscode.workspace.rootPath;
       }
 
-      let componentDir = `${contextMenuSourcePath}/${pascalCase(
-        componentName
-      )}`;
+      let componentDir = `${contextMenuSourcePath}/${kebabize(componentName)}`;
       fse.mkdirsSync(componentDir);
 
       return componentDir;
     },
 
-    createComponent: function(componentDir, componentName, type) {
+    createIndexFile: function (componentDir, compName, type, extension) {
       let templateFileName = this.templatesDir + `/${type}.template`;
 
-      const compName = pascalCase(componentName);
-
       let componentContent = fs
         .readFileSync(templateFileName)
         .toString()
-        .replace(/{componentName}/g, compName);
+        .replace(/{componentNamePascal}/g, pascalCase(compName))
+        .replace(/{componentNameKebab}/g, kebabize(compName));
 
-      let filename = `${componentDir}/${compName}.jsx`;
+      let filename = `${componentDir}/index${extension}`;
 
       return this.createFile(filename, componentContent);
     },
 
-    createTestFile: function(componentDir, componentName) {
-      let templateFileName = this.templatesDir + `/test.template`;
-
-      const compName = pascalCase(componentName);
+    createComponentFile: function (componentDir, compName, type, extension) {
+      let templateFileName = this.templatesDir + `/${type}.template`;
 
       let componentContent = fs
         .readFileSync(templateFileName)
         .toString()
-        .replace(/{componentName}/g, compName);
+        .replace(/{componentNamePascal}/g, pascalCase(compName))
+        .replace(/{componentNameKebab}/g, kebabize(compName));
 
-      let filename = `${componentDir}/${compName}.test.jsx`;
+      let filename = `${componentDir}/${kebabize(compName)}${extension}`;
 
       return this.createFile(filename, componentContent);
     },
 
-    createPackageJSON: function(componentDir, componentName) {
-      let templateFileName = this.templatesDir + '/package.template';
-
-      const compName = pascalCase(componentName);
-      let indexContent = fs
-        .readFileSync(templateFileName)
-        .toString()
-        .replace(/{componentName}/g, compName);
-
-      let filename = `${componentDir}/package.json`;
-
-      return this.createFile(filename, indexContent);
+    createInterfacesFile: function (componentDir, componentName) {
+      return this.createComponentFile(componentDir, componentName, 'interfaces', '-interfaces.ts')
     },
 
-    createCSS: function(componentDir, componentName) {
-      let templateFileName = `${this.templatesDir}/sass.template`;
+    createTestFile: function (componentDir, componentName) {
+      return this.createComponentFile(componentDir, componentName, 'test', '.test.tsx')
+    },
 
-      const compName = pascalCase(componentName);
-      let cssContent = fs
-        .readFileSync(templateFileName)
-        .toString()
-        .replace(/{componentName}/g, compName);
-
-      let filename = `${componentDir}/${compName}.sass`;
-
-      return this.createFile(filename, cssContent);
+    createSCSS: function (componentDir, componentName) {
+      return this.createComponentFile(componentDir, componentName, 'sass', '.scss')
     }
   }
 };

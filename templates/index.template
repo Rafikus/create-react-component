@@ -1,0 +1,3 @@
+import {componentNamePascal} from './{componentNameKebab}'
+
+export default {componentNamePascal}

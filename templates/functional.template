@@ -1,20 +1,11 @@
-'use strict';
-// @flow
-import React from 'react';
-import PropTypes from 'prop-types';
+import { {componentNamePascal}Props } from './{componentNameKebab}-interfaces'
 
-const {componentName} = props => (
-  <div className="{componentName}-wrapper">
-    Test content
-  </div>
-);
-
-{componentName}.PropTypes = {
-
+const {componentNamePascal} = (props: {componentNamePascal}Props) => {
+  return (
+    <div className="{componentNameKebab}-wrapper">
+      {componentNamePascal}
+    </div>
+  )
 }
 
-{componentName}.defaultProps = {
-
-} 
-
-export default {componentName};
+export default {componentNamePascal}

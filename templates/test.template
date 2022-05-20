@@ -1,11 +1,10 @@
-'use strict';
-// @flow
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {componentName} from './{componentName}';
+import { render } from '@testing-library/react'
+import {componentNamePascal} from './{componentNameKebab}'
 
-it('{componentName} renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<{componentName} />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+describe('{componentNamePascal} component tests', () => {
+  it('Renders', async () => {
+    const appComponent = render(<{componentNamePascal} />)
+
+    expect(appComponent.container).toBeInTheDocument()
+  })
+})

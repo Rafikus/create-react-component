@@ -25,10 +25,11 @@ function activate(context) {
         let componentDir = generators.createComponentDir(uri, componentName);
 
         return Promise.all([
-          generators.createComponent(componentDir, componentName, type),
+          generators.createComponentFile(componentDir, componentName, type, ".tsx"),
           generators.createTestFile(componentDir, componentName),
-          generators.createPackageJSON(componentDir, componentName),
-          generators.createCSS(componentDir, componentName)
+          generators.createInterfacesFile(componentDir, componentName),
+          generators.createIndexFile(componentDir, componentName, 'index', '.ts'),
+          generators.createSCSS(componentDir, componentName)
         ]);
       })
       .then(
@@ -39,14 +40,9 @@ function activate(context) {
 
   const componentsList = [
     {
-      type: 'class',
-      commandID: 'extension.createReactClassComponent'
-    },
-    {
       type: 'functional',
       commandID: 'extension.createReactFunctionalComponent'
-    },
-    { type: 'pure', commandID: 'extension.createReactPureComponent' }
+    }
   ];
 
   componentsList.forEach(comp => {
@@ -58,7 +54,7 @@ function activate(context) {
   });
 }
 
-function deactivate() {}
+function deactivate() { }
 
 module.exports = {
   activate,
