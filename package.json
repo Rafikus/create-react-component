@@ -1,10 +1,10 @@
 {
-  "name": "create-react-component",
-  "displayName": "Create react component",
+  "name": "fancy-react-component-creator",
+  "displayName": "Fancy react component creator",
   "description": "Util made to quickly create folder with React component, its styles file and test file",
   "author": "Rafał Kusy",
   "publisher": "rafikus",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.30.0"
   },

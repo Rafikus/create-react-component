@@ -1,4 +1,5 @@
 import { {componentNamePascal}Props } from './{componentNameKebab}-interfaces'
+import './{componentNameKebab}.scss'
 
 const {componentNamePascal} = (props: {componentNamePascal}Props) => {
   return (
