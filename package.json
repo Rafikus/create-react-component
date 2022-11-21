@@ -65,5 +65,5 @@
     "fs": "0.0.1-security",
     "fs-extra": "^7.0.1"
   },
-  "repository": "https://github.com/Galahatt/create-react-component"
+  "repository": "https://github.com/Rafikus/create-react-component"
 }
