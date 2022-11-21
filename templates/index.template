@@ -1,1 +1,1 @@
-export {componentNamePascal} from './{componentNameKebab}'
+export { {componentNamePascal} } from './{componentNameKebab}'
