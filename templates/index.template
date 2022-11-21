@@ -1,3 +1,1 @@
-import {componentNamePascal} from './{componentNameKebab}'
-
-export default {componentNamePascal}
+export {componentNamePascal} from './{componentNameKebab}'

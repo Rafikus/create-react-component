@@ -1,12 +1,15 @@
 'use strict';
 const vscode = require('vscode');
-const paramCase = require('change-case').paramCase;
 const utils = require('./utils');
-const { logger, generators } = utils;
+const { logger, generators, getUsedCase } = utils;
 
 function activate(context) {
+
   let createComponent = (uri, type) => {
     console.log('Create-react-component activated...');
+
+    const configuredCase = vscode.workspace.getConfiguration('fancy-react-component-creator').get('nameFileCase')
+    const convertToCase = getUsedCase(configuredCase)
 
     new Promise(resolve =>
       vscode.window
@@ -21,15 +24,15 @@ function activate(context) {
           throw new Error('Component name can not be empty!');
         }
 
-        let componentName = paramCase(val);
+        let componentName = convertToCase(val);
         let componentDir = generators.createComponentDir(uri, componentName);
 
         return Promise.all([
-          generators.createComponentFile(componentDir, componentName, type, ".tsx"),
           generators.createTestFile(componentDir, componentName),
           generators.createInterfacesFile(componentDir, componentName),
+          generators.createSCSS(componentDir, componentName),
+          generators.createComponentFile(componentDir, componentName, type, ".tsx"),
           generators.createIndexFile(componentDir, componentName, 'index', '.ts'),
-          generators.createSCSS(componentDir, componentName)
         ]);
       })
       .then(
@@ -41,7 +44,8 @@ function activate(context) {
   const componentsList = [
     {
       type: 'functional',
-      commandID: 'extension.createReactFunctionalComponent'
+      commandID: 'extension.createReactFunctionalComponent',
+
     }
   ];
 

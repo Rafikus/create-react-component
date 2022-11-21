@@ -3,7 +3,7 @@ const vscode = require('vscode');
 const fse = require('fs-extra');
 const fs = require('fs');
 const path = require('path');
-const { pascalCase, paramCase: kebabize } = require('change-case');
+const changeCase = require('change-case');
 
 function logger(type, msg = '') {
   switch (type) {
@@ -16,11 +16,25 @@ function logger(type, msg = '') {
   }
 }
 
-// const kebabize = (str) => str
-//   .replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase())
-
+const getUsedCase = (configuredCase) => {
+  switch (configuredCase) {
+    case "camelCase":
+      return changeCase.camelCase;
+    case "PascalCase":
+      return changeCase.pascalCase;
+    case "snake_case":
+      return changeCase.snakeCase;
+    case "kebab-case":
+      return changeCase.kebabCase;
+    case "CONSTANT_CASE":
+      return changeCase.constantCase;
+    default:
+      return (value) => value
+  }
+}
 
 module.exports = {
+  getUsedCase,
   logger,
   generators: {
     templatesDir: path.join(__dirname, '/templates'),
@@ -35,6 +49,8 @@ module.exports = {
       path.replace('${workspaceFolder}', vscode.workspace.rootPath),
 
     createComponentDir: function (uri, componentName) {
+      const configuredCase = vscode.workspace.getConfiguration('fancy-react-component-creator').get('nameFileCase')
+      const convertToCase = getUsedCase(configuredCase)
       let contextMenuSourcePath;
 
       if (uri && fs.lstatSync(uri.fsPath).isDirectory()) {
@@ -45,20 +61,22 @@ module.exports = {
         contextMenuSourcePath = vscode.workspace.rootPath;
       }
 
-      let componentDir = `${contextMenuSourcePath}/${kebabize(componentName)}`;
+      let componentDir = `${contextMenuSourcePath}/${convertToCase(componentName)}`;
       fse.mkdirsSync(componentDir);
 
       return componentDir;
     },
 
     createIndexFile: function (componentDir, compName, type, extension) {
+      const configuredCase = vscode.workspace.getConfiguration('fancy-react-component-creator').get('nameFileCase')
+      const convertToCase = getUsedCase(configuredCase)
       let templateFileName = this.templatesDir + `/${type}.template`;
 
       let componentContent = fs
         .readFileSync(templateFileName)
         .toString()
-        .replace(/{componentNamePascal}/g, pascalCase(compName))
-        .replace(/{componentNameKebab}/g, kebabize(compName));
+        .replace(/{componentNamePascal}/g, changeCase.pascalCase(compName))
+        .replace(/{componentNameKebab}/g, convertToCase(compName));
 
       let filename = `${componentDir}/index${extension}`;
 
@@ -66,15 +84,17 @@ module.exports = {
     },
 
     createComponentFile: function (componentDir, compName, type, extension) {
+      const configuredCase = vscode.workspace.getConfiguration('fancy-react-component-creator').get('nameFileCase')
+      const convertToCase = getUsedCase(configuredCase)
       let templateFileName = this.templatesDir + `/${type}.template`;
 
       let componentContent = fs
         .readFileSync(templateFileName)
         .toString()
-        .replace(/{componentNamePascal}/g, pascalCase(compName))
-        .replace(/{componentNameKebab}/g, kebabize(compName));
+        .replace(/{componentNamePascal}/g, changeCase.pascalCase(compName))
+        .replace(/{componentNameKebab}/g, convertToCase(compName));
 
-      let filename = `${componentDir}/${kebabize(compName)}${extension}`;
+      let filename = `${componentDir}/${convertToCase(compName)}${extension}`;
 
       return this.createFile(filename, componentContent);
     },
@@ -89,6 +109,6 @@ module.exports = {
 
     createSCSS: function (componentDir, componentName) {
       return this.createComponentFile(componentDir, componentName, 'sass', '.scss')
-    }
+    },
   }
 };
