@@ -1,3 +1,4 @@
+import React from 'react'
 import { {componentNamePascal}Props } from './{componentNameKebab}-interfaces'
 import './{componentNameKebab}.scss'
 
