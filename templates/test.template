@@ -1,9 +1,9 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import {componentNamePascal} from './{componentNameKebab}'
+import { {componentNamePascal} } from './{componentNameKebab}'
 
 describe('{componentNamePascal} component tests', () => {
-  it('Renders', async () => {
+  it('Should render', () => {
     const appComponent = render(<{componentNamePascal} />)
 
     expect(appComponent.container).toBeInTheDocument()
