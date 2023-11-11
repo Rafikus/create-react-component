@@ -1,0 +1,11 @@
+import React from 'react'
+{typesImport}
+{styleImport}
+
+export const {componentNamePascal} = (props: {componentNamePascal}Props) => {
+  return (
+    <div {styleClassName}>
+      {componentNamePascal}
+    </div>
+  )
+}
