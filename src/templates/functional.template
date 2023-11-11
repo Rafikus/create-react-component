@@ -1,8 +1,8 @@
-import React from 'react'
 {typesImport}
+
 {styleImport}
 
-export const {componentNamePascal} = (props: {componentNamePascal}Props) => {
+export const {componentNamePascal} = ({typesProps}) => {
   return (
     <div {styleClassName}>
       {componentNamePascal}

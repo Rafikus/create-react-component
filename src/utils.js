@@ -112,19 +112,23 @@ module.exports = {
         .readFileSync(templateFileName)
         .toString()
         .replace(
-          /\n{typesImport}/g,
+          `\n{typesImport}`,
           selected?.includes("Types")
-            ? `import { {componentNamePascal}Props } from './{componentNameKebab}-interfaces';`
+            ? `import { {componentNamePascal}Props } from './{componentNameKebab}-types';`
             : ""
         )
         .replace(
-          /\n{styleImport}/g,
+          `{typesProps}`,
+          selected?.includes("Types") ? `props: {componentNamePascal}Props` : ""
+        )
+        .replace(
+          `\n{styleImport}`,
           selected?.includes("Styles")
             ? `import './{componentNameKebab}.scss';`
             : ""
         )
         .replace(
-          /{styleClassName}/g,
+          `{styleClassName}`,
           selected?.includes("Styles")
             ? `className="{componentNameKebab}-wrapper"`
             : ""
