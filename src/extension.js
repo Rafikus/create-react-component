@@ -68,7 +68,23 @@ function activate(context) {
           ]);
         })
         .then(
-          () => logger("success", "React component successfully created!"),
+          () => {
+            const componentName = convertToCase(val);
+            const componentDir = generators.createComponentDir(
+              uri,
+              componentName
+            );
+
+            vscode.workspace
+              .openTextDocument(
+                `${componentDir}${utils.slash()}${convertToCase(
+                  componentName
+                )}.tsx`
+              )
+              .then((doc) => {
+                vscode.window.showTextDocument(doc);
+              });
+          },
           (err) => logger("error", err.message)
         );
     });

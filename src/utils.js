@@ -40,6 +40,7 @@ const getUsedCase = (configuredCase) => {
 };
 
 module.exports = {
+  slash,
   getUsedCase,
   logger,
   generators: {
