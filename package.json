@@ -4,7 +4,7 @@
   "description": "Util made to quickly create folder with React component, its styles file and test file",
   "author": "Rafał Kusy",
   "publisher": "rafikus",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "engines": {
     "vscode": "^1.30.0"
   },

@@ -3,9 +3,5 @@
 {styleImport}
 
 export const {componentNamePascal} = ({typesProps}) => {
-  return (
-    <div {styleClassName}>
-      {componentNamePascal}
-    </div>
-  )
+  return <div {styleClassName}>{componentNamePascal}</div>
 }

@@ -131,9 +131,9 @@ module.exports = {
             : ""
         )
         .replace(
-          `{styleClassName}`,
+          ` {styleClassName}`,
           selected.includes("Styles")
-            ? `className="{componentNameKebab}-wrapper"`
+            ? ` className="{componentNameKebab}-wrapper"`
             : ""
         )
         .replace(/{componentNamePascal}/g, changeCase.pascalCase(compName))
