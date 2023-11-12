@@ -106,37 +106,41 @@ module.exports = {
         .getConfiguration("fancy-react-component-creator")
         .get("nameFileCase");
       const convertToCase = getUsedCase(configuredCase);
-      let templateFileName = this.templatesDir + `${slash()}${type}.template`;
+      const templateFileName = this.templatesDir + `${slash()}${type}.template`;
+
+      if (selected == undefined) selected = [];
 
       let componentContent = fs
         .readFileSync(templateFileName)
         .toString()
         .replace(
-          `\n{typesImport}`,
-          selected?.includes("Types")
+          `{typesImport}`,
+          selected.includes("Types")
             ? `import { {componentNamePascal}Props } from './{componentNameKebab}-types';`
             : ""
         )
         .replace(
           `{typesProps}`,
-          selected?.includes("Types") ? `props: {componentNamePascal}Props` : ""
+          selected.includes("Types") ? `{}: {componentNamePascal}Props` : ""
         )
         .replace(
-          `\n{styleImport}`,
-          selected?.includes("Styles")
+          `{styleImport}`,
+          selected.includes("Styles")
             ? `import './{componentNameKebab}.scss';`
             : ""
         )
         .replace(
           `{styleClassName}`,
-          selected?.includes("Styles")
+          selected.includes("Styles")
             ? `className="{componentNameKebab}-wrapper"`
             : ""
         )
         .replace(/{componentNamePascal}/g, changeCase.pascalCase(compName))
-        .replace(/{componentNameKebab}/g, convertToCase(compName));
+        .replace(/{componentNameKebab}/g, convertToCase(compName))
+        .trim()
+        .replace(/\r\n\r\n\r\n\r\n/g, "\r\n\r\n");
 
-      let filename = `${componentDir}${slash()}${convertToCase(
+      const filename = `${componentDir}${slash()}${convertToCase(
         compName
       )}${extension}`;
 
